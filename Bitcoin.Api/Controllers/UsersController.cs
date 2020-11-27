@@ -36,6 +36,5 @@ namespace Bitcoin.Api.Controllers
             _userDb.Create(user);
             return Ok();
         }
-
     }
 }

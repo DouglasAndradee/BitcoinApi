@@ -21,6 +21,7 @@ namespace webapi.mongodb.Controllers
         /// <summary>
         /// Faz a autenticação do usuário.
         /// </summary>
+        /// 
         /// <response code = "200">
         /// Usando somente os campos abaixo:<br />
         /// email: "string",<br />
@@ -32,7 +33,7 @@ namespace webapi.mongodb.Controllers
         [Route("login")]
         [AllowAnonymous]
 
-        public IActionResult Authentication(User body)
+        public IActionResult Authentication(Authentication body)
         {
             if (body.Email == null || body.Password == null)
             {

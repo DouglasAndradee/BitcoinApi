@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using RestSharp;
 using RestSharp.Serializers.Utf8Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bitcoin.Api.Controllers
 {
@@ -27,7 +28,7 @@ namespace Bitcoin.Api.Controllers
         [Route("ticker")]
         [Authorize(Roles = "ADMIN")]
 
-        public IActionResult TickerBitCoinAsync()
+        public IActionResult TickerBitCoinAsync([FromHeader(Name = "Authorization Bearer")][Required] string requiredHeader)
         {
 
             RestClient client = new RestClient("https://www.mercadobitcoin.net/api/");
@@ -61,7 +62,7 @@ namespace Bitcoin.Api.Controllers
         [Route("trades")]
         [Authorize(Roles = "ADMIN,MANAGER")]
 
-        public IActionResult BitCoinTrades()
+        public IActionResult BitCoinTrades([FromHeader(Name = "Authorization Bearer")][Required] string requiredHeader)
         {
             RestClient client = new RestClient("https://www.mercadobitcoin.net/api/");
             client.UseUtf8Json();
