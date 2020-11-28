@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using RestSharp;
 using RestSharp.Serializers.Utf8Json;
 using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using Bitcoin.Api.Models;
+using Newtonsoft.Json;
 
 namespace Bitcoin.Api.Controllers
 {
@@ -28,13 +32,14 @@ namespace Bitcoin.Api.Controllers
         [Route("ticker")]
         [Authorize(Roles = "ADMIN")]
 
-        public IActionResult TickerBitCoinAsync([FromHeader(Name = "Authorization Bearer")][Required] string requiredHeader)
+        public IActionResult TickerBitCoinAsync([FromHeader(Name = "Authorization")][Required] string requiredHeader)
         {
 
             RestClient client = new RestClient("https://www.mercadobitcoin.net/api/");
             client.UseUtf8Json();
 
             var request = new RestRequest("BTC/ticker/", DataFormat.Json);
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
 
             var response = client.Get(request);
 
@@ -42,8 +47,9 @@ namespace Bitcoin.Api.Controllers
             {
                 return BadRequest();
             }
+            var tickers = JsonConvert.DeserializeObject<Result>(response.Content);
 
-            return Ok(response.Content);
+            return Ok(tickers);
         }
 
         /// <summary>
@@ -62,12 +68,14 @@ namespace Bitcoin.Api.Controllers
         [Route("trades")]
         [Authorize(Roles = "ADMIN,MANAGER")]
 
-        public IActionResult BitCoinTrades([FromHeader(Name = "Authorization Bearer")][Required] string requiredHeader)
+        public IActionResult BitCoinTrades([FromHeader(Name = "Authorization")][Required] string requiredHeader)
         {
+
             RestClient client = new RestClient("https://www.mercadobitcoin.net/api/");
             client.UseUtf8Json();
 
             var request = new RestRequest("BTC/trades/", DataFormat.Json);
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
 
             var response = client.Get(request);
 
@@ -75,8 +83,9 @@ namespace Bitcoin.Api.Controllers
             {
                 return BadRequest();
             }
+            var trades = JsonConvert.DeserializeObject<List<Trade>>(response.Content);
 
-            return Ok(response.Content);
+            return Ok(trades);
         }
 
         /// <summary>
@@ -98,14 +107,17 @@ namespace Bitcoin.Api.Controllers
 
             var request = new RestRequest("/BTC/orderbook", DataFormat.Json);
 
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+
             var response = client.Get(request);
 
             if (response.StatusCode.ToString() != "OK")
             {
                 return BadRequest();
             }
+            var orderBook = JsonConvert.DeserializeObject<OrderBook>(response.Content);
 
-            return Ok(response.Content);
+            return Ok(orderBook);
         }
 
     }
