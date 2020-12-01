@@ -67,7 +67,7 @@ namespace Bitcoin.Api.Controllers
 
             if (result == null)
             {
-                return NotFound();
+                return NotFound("Usuário não encontrado");
             }
 
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
@@ -88,7 +88,7 @@ namespace Bitcoin.Api.Controllers
 
             if (result == null)
             {
-                return NotFound();
+                return NotFound("Usuário não encontrado");
             }
 
             _userDb.DeleteById(result.Id);
