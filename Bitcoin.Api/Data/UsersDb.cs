@@ -12,8 +12,8 @@ namespace Bitcoin.Api.Data
 
         public UsersDb(IUsersDatabaseSettings settings)
         {
-            var client = new MongoClient("mongodb+srv://douglasA:921026@sandbox.c6fz6.mongodb.net/");
-            var database = client.GetDatabase("UsersApiDb");
+            var client = new MongoClient("yourConecctionString");
+            var database = client.GetDatabase("yourDatabase");
 
             _usersCollection = database.GetCollection<User>(settings.UsersCollectionName);
         }
